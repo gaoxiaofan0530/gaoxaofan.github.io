@@ -1,0 +1,948 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="HTTP详解, 高晓凡的博客">
+    <meta name="description" content="网络是由若干节点和连接这些节点的链路构成，然后网络与网络之间所串连成的庞大网络叫做互联网，而我们今天要讲的HTTP（HyperText Transfer Protocol 超文本传输协议)是互联网上应用最为广泛的一种网络协议，它是由万维网协">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>HTTP详解 | 高晓凡的博客</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    <style type="text/css">
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+</head>
+
+
+<body>
+
+<header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <span class="logo-span">高晓凡的博客</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <div class="logo-name">高晓凡的博客</div>
+        <div class="logo-desc">
+            
+            代码改变世界，努力改变人生
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/gaoxiaofan0530/gaoxiaofan.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/gaoxiaofan0530/gaoxiaofan.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        HTTP详解
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/HTTP/" target="_blank">
+                                <span class="chip bg-color">HTTP</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                技术
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-05-28
+                </div>
+
+                
+				
+				
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>网络是由若干节点和连接这些节点的链路构成，然后网络与网络之间所串连成的庞大网络叫做互联网，而我们今天要讲的HTTP（HyperText Transfer Protocol 超文本传输协议)是互联网上应用最为广泛的一种网络协议，它是由万维网协会（World Wide Web Consortium）制定发布。</p>
+<p>文章主要以一次HTTP请求的整个过程来讲解(DNS解析不讲)：HTTP起源、TCP/IP协议、建立TCP连接、客户端请求、服务端响应、断开TCP连接，文章最后还捎带讲了与HTTP相关知识。</p>
+<p><img src="/medias/img/20.png" alt></p>
+<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><h4 id="1-起源"><a href="#1-起源" class="headerlink" title="1.起源"></a>1.起源</h4><p>今天我们能够在网络中畅游，都得益于一位计算机科学家蒂姆·伯纳斯·李的构想。1991年8月6日，蒂姆·伯纳斯·李在位于欧洲粒子物理研究所（CERN）的NeXT计算机上，正式公开运行世界上第一个Web网站（<a href="http://info.cern.ch" target="_blank" rel="noopener">http://info.cern.ch</a> ），建立起基本的互联网基础概念和技术体系，由此开启了网络信息时代的序幕</p>
+<p><img src="/medias/img/21.jpg" alt></p>
+<p>伯纳斯·李的提案包含了网络的基本概念并逐步建立了所有必要的工具：</p>
+<ol>
+<li><p>提出HTTP (Hypertext Transfer Protocol) 超文本传输协议，允许用户通过单击超链接访问资源；</p>
+</li>
+<li><p>提出使用HTML超文本标记语言(Hypertext Markup Language)作为创建网页的标准；</p>
+</li>
+<li><p>创建了统一资源定位器URL (Uniform Resource Locator)作为网站地址系统，就是沿用至今的<a href="http://www" target="_blank" rel="noopener">http://www</a> URL格式；</p>
+</li>
+<li><p>创建第一个Web浏览器，称为万维网浏览器，这也是一个Web编辑器；</p>
+</li>
+<li><p>创建第一个Web服务器（<a href="http://info.cern.ch）以及描述项目本身的第一个Web页面。" target="_blank" rel="noopener">http://info.cern.ch）以及描述项目本身的第一个Web页面。</a></p>
+</li>
+</ol>
+<h4 id="2-特点"><a href="#2-特点" class="headerlink" title="2.特点"></a>2.特点</h4><p>HTTP 协议一共有五大特点：</p>
+<ol>
+<li><p>支持客户/服务器模式。</p>
+</li>
+<li><p>简单快速：客户向服务器请求服务时，只需传送请求方法和路径。</p>
+</li>
+<li><p>灵活：HTTP允许传输任意类型的数据对象。正在传输的类型由Content-Type（Content-Type是HTTP包中用来表示内容类型的标识）加以标记。</p>
+</li>
+<li><p>无连接：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间。</p>
+</li>
+<li><p>无状态：无状态是指协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。即我们给服务器发送 HTTP 请求之后，服务器根据请求，会给我们发送数据过来，但是，发送完，不会记录任何信息（Cookie和Session孕育而生，后期再讲）。</p>
+</li>
+</ol>
+<h2 id="二、TCP-IP协议"><a href="#二、TCP-IP协议" class="headerlink" title="二、TCP/IP协议"></a>二、TCP/IP协议</h2><p>我们经常听到一句话就是：HTTP是一个基于TCP/IP协议簇来传递数据。<br>如何理解上面那句话？我们来看看TCP/IP四层模型就明白了。</p>
+<p><img src="/medias/img/22.jpg" alt></p>
+<p>从上图我们可以清晰的看到HTTP使用的传输层协议为<code>TCP协议</code>，而网络层使用的是IP协议（当然还使用了很多其他协议），所以说<code>HTTP是一个基于TCP/IP协议簇来传递数据</code>。</p>
+<blockquote>
+<blockquote>
+<p>同样我们可以看到ping走的ICMP协议，这也就是为什么有时候我们开vps可以上网，但是ping google却ping不通的原因，因为走的是不同的协议。</p>
+</blockquote>
+</blockquote>
+<p>那TCP/IP协议簇大致是如何工作的，我们再来看看下图：</p>
+<p><img src="/medias/img/23.jpg" alt></p>
+<p>我们可以看到在数据发送端是一层一层封装数据，数据接收端一层一层拆封，最后应用层获得数据。</p>
+<h2 id="三、建立TCP连接"><a href="#三、建立TCP连接" class="headerlink" title="三、建立TCP连接"></a>三、建立TCP连接</h2><p>我们知道了TCP/IP协议簇大致的工作原理之后，我们来看看HTTP是如何建立连接的。</p>
+<h4 id="1-TCP包头信息"><a href="#1-TCP包头信息" class="headerlink" title="1.TCP包头信息"></a>1.TCP包头信息</h4><p>前面咱们讲过<code>HTTP是一个基于TCP/IP协议簇来传递数据</code>，所以这HTTP建立连接也就是建立TCP连接，TCP如何建立连接，一起来看看TCP包信息结构吧。</p>
+<p><img src="/medias/img/24.jpg" alt></p>
+<p><code>TCP报文包=TCP头信息+TCP数据体</code>，而在TCP头信息中包含了6种控制位（上图红色框中），这六种标志位就代表着TCP连接的状态：</p>
+<ul>
+<li><code>URG：紧急数据（urgent data）—这是一条紧急信息</code></li>
+<li><code>ACK：确认已收到</code></li>
+<li><code>PSH：提示接收端应用程序应该立即从tcp接受缓冲区中读走数据</code></li>
+<li><code>RST：表示要求对方重新建立连接</code></li>
+<li><code>SYN：表示请求建立一个连接</code></li>
+<li><code>FIN：表示通知对方本端要关闭连接了</code></li>
+</ul>
+<h4 id="2-建立连接过程"><a href="#2-建立连接过程" class="headerlink" title="2.建立连接过程"></a>2.建立连接过程</h4><p>了解了TCP包头信息之后，我们就可以正式看看TCP建立连接的三次握手了。</p>
+<p><img src="/medias/img/25.jpg" alt></p>
+<p>三次握手讲解：</p>
+<ol>
+<li><p>客户端发送位码为syn＝1,随机产生seq number=1234567的数据包到服务器，服务器由SYN=1知道客户端要求建立联机（客户端：我要连接你）</p>
+</li>
+<li><p>服务器收到请求后要确认联机信息，向A发送ack number=(客户端的seq+1),syn=1,ack=1,随机产生seq=7654321的包（服务器：好的，你来连吧）</p>
+</li>
+<li><p>客户端收到后检查ack number是否正确，即第一次发送的seq number+1,以及位码ack是否为1，若正确，客户端会再发送ack number=(服务器的seq+1),ack=1，服务器收到后确认seq值与ack=1则连接建立成功。（客户端：好的，我来了）</p>
+</li>
+</ol>
+<blockquote>
+<blockquote>
+<p>面试官：为什么http建立连接需要三次握手，不是两次或四次<br>答：三次是最少的安全次数，两次不安全，四次浪费资源</p>
+</blockquote>
+</blockquote>
+<h2 id="四、客户端请求"><a href="#四、客户端请求" class="headerlink" title="四、客户端请求"></a>四、客户端请求</h2><p>客户端与服务器连接上了之后，客户端就可以开始向服务器请求资源，就可以开始发送HTTP请求了。</p>
+<h4 id="1-HTTP请求报文结构"><a href="#1-HTTP请求报文结构" class="headerlink" title="1.HTTP请求报文结构"></a>1.HTTP请求报文结构</h4><p>我们之前说过<code>TCP报文包=TCP头信息+TCP数据体</code>，TCP头信息我们已经讲了，现在来讲TCP数据体，也就是我们的<code>HTTP请求报文</code>。</p>
+<p><img src="/medias/img/26.jpg" alt></p>
+<h4 id="2-HTTP请求实例"><a href="#2-HTTP请求实例" class="headerlink" title="2.HTTP请求实例"></a>2.HTTP请求实例</h4><p>来看看实际的HTTP请求例子：</p>
+<p><img src="/medias/img/27.jpg" alt></p>
+<ol>
+<li><p>①是请求方法，HTTP/1.1 定义的请求方法有8种：GET、POST、PUT、DELETE、PATCH、HEAD、OPTIONS、TRACE,最常的两种GET和POST，如果是RESTful接口的话一般会用到GET、POST、DELETE、PUT</p>
+</li>
+<li><p>②为请求对应的URL地址，它和报文头的Host属性组成完整的请求URL</p>
+</li>
+<li><p>③是协议名称及版本号</p>
+</li>
+<li><p>④是HTTP的报文头，报文头包含若干个属性，格式为“属性名:属性值”，服务端据此获取客户端的信息</p>
+</li>
+<li><p>⑤是报文体，它将一个页面表单中的组件值通过param1=value1&amp;param2=value2的键值对形式编码成一个格式化串，它承载多个请求参数的数据。不但报文体可以传递请求参数，请求URL也可以通过类似于“/chapter15/user.html? param1=value1&amp;param2=value2”的方式传递请求参数。</p>
+</li>
+</ol>
+<p>请求头参数非常多，猪哥就不一一说明，只说明两个低级的反扒参数：</p>
+<ol>
+<li><p>User-Agent：客户端使用的操作系统和浏览器的名称和版本，有些网站会限制请求浏览器</p>
+</li>
+<li><p>Referer：先前网页的地址，表示此请求来自哪里，有些网站会限制请求来源</p>
+</li>
+</ol>
+<h2 id="五、服务端响应"><a href="#五、服务端响应" class="headerlink" title="五、服务端响应"></a>五、服务端响应</h2><p>服务器在收到客户端请求处理完需要响应并返回给客户端，而HTTP响应报文结构与请求结构体一致。</p>
+<h4 id="1-HTTP响应报文结构"><a href="#1-HTTP响应报文结构" class="headerlink" title="1.HTTP响应报文结构"></a>1.HTTP响应报文结构</h4><p><img src="/medias/img/28.jpg" alt></p>
+<h4 id="2-HTTP响应实例"><a href="#2-HTTP响应实例" class="headerlink" title="2.HTTP响应实例"></a>2.HTTP响应实例</h4><p><img src="/medias/img/29.jpg" alt></p>
+<h4 id="3-响应状态码"><a href="#3-响应状态码" class="headerlink" title="3.响应状态码"></a>3.响应状态码</h4><p>响应报文中我们重点关注下：服务器的响应状态码，面试也很容易问到，下面猪哥只列出分类，详细状态码自行上网查找了解。</p>
+<p><img src="/medias/img/30.jpg" alt></p>
+<h2 id="六、断开连接"><a href="#六、断开连接" class="headerlink" title="六、断开连接"></a>六、断开连接</h2><p>在服务器响应完毕后，一次会话就结束了，请问这时候连接会断开吗？</p>
+<h4 id="1-长短连接"><a href="#1-长短连接" class="headerlink" title="1.长短连接"></a>1.长短连接</h4><p>是否断开我们需要区分HTTP版本：</p>
+<ul>
+<li>在HTTP/1.0版本的时候，客户端与服务器完成一个请求/响应之后，会将之前建立的TCP连接断开，下次请求的时候又要重新建立TCP连接，这也被称为短连接</li>
+<li>在HTTP1.0发布仅半年后（1997年1月） ，HTTP/1.1版本发布并带来一个新的功能：在客户端与服务器完成一次请求/响应之后，允许不断开TCP连接，这意味着下次请求就直接使用这个TCP连接而不再需要重新握手建立新连接，这也被称为长连接</li>
+</ul>
+<p><code>注意：长连接是指一次TCP连接允许多次HTTP会话，HTTP永远都是一次请求/响应，会话结束，HTTP本身不存在长连接之说。</code></p>
+<p>早在1999年HTTP1.1就推广普及，所以现在浏览器在请求时请求头中都会携带一个参数：Connection:keep-alive，这表示浏览器要求与服务器建立长连接，而服务器也可以设置是否愿意建立长连接。</p>
+<h4 id="2-长连接优缺点"><a href="#2-长连接优缺点" class="headerlink" title="2.长连接优缺点"></a>2.长连接优缺点</h4><p>对于服务器来说建立长连接有优点也有缺点：</p>
+<ul>
+<li>优点：当网站中有大量静态资源（图片、css、js等）就可以开启长连接，这也几张图片就可以通过一次TCP连接发送。</li>
+<li>缺点：当客户端请求一次时候不在请求，而服务器却开着长连接资源被占用着，这是严重浪费资源。</li>
+</ul>
+<p>所以是否开启长连接，长连接时间都需要根据网站自身来合理设置。</p>
+<p>ps：大家不要小看这一个TCP连接，在一次客户端HTTP完整的请求中（DNS寻址、建立TCP连接、请求、等待、解析网页、断开TCP连接）建立TCP连接占用的时间比还是很大的。</p>
+<h4 id="3-断开连接过程"><a href="#3-断开连接过程" class="headerlink" title="3.断开连接过程"></a>3.断开连接过程</h4><p><code>在建立TCP连接时是三次握手，而断开TCP连接是四次挥手！</code></p>
+<p><img src="/medias/img/31.jpg" alt></p>
+<h2 id="七、题外话"><a href="#七、题外话" class="headerlink" title="七、题外话"></a>七、题外话</h2><h4 id="1-面试必考题：http三次握手、四次挥手"><a href="#1-面试必考题：http三次握手、四次挥手" class="headerlink" title="1.面试必考题：http三次握手、四次挥手"></a>1.面试必考题：http三次握手、四次挥手</h4><blockquote>
+<blockquote>
+<p>面试官：为何建立连接需要三次握手而关闭连接却需要四次挥手</p>
+</blockquote>
+</blockquote>
+<p>先上图：</p>
+<p><img src="/medias/img/33.jpeg" alt></p>
+<h5 id="一、TCP三次握手"><a href="#一、TCP三次握手" class="headerlink" title="一、TCP三次握手"></a>一、TCP三次握手</h5><p>如上图：</p>
+<p>第一次握手：</p>
+<ul>
+<li>建立连接。客户端发送连接请求报文段，将SYN位置为1，Sequence Number为x；然后，客户端进入SYN_SEND状态，等待服务器的确认；</li>
+</ul>
+<p>第二次握手：</p>
+<ul>
+<li>服务器收到SYN报文段。服务器收到客户端的SYN报文段，需要对这个SYN报文段进行确认，设置Acknowledgment Number为x+1(Sequence Number+1)；同时，自己自己还要发送SYN请求信息，将SYN位置为1，Sequence Number为y；服务器端将上述所有信息放到一个报文段（即SYN+ACK报文段）中，一并发送给客户端，此时服务器进入SYN_RECV状态；</li>
+</ul>
+<p>第三次握手：</p>
+<ul>
+<li><p>客户端收到服务器的SYN+ACK报文段。然后将Acknowledgment Number设置为y+1，向服务器发送ACK报文段，这个报文段发送完毕以后，客户端和服务器端都进入ESTABLISHED状态，完成TCP三次握手。<br>#####二、TCP四次挥手<br>第一次挥手：</p>
+</li>
+<li><p>主机1（可以使客户端，也可以是服务器端），设置Sequence Number和Acknowledgment Number，向主机2发送一个FIN报文段；此时，主机1进入FIN_WAIT_1状态；这表示主机1没有数据要发送给主机2了；</p>
+</li>
+</ul>
+<p>第二次挥手：</p>
+<ul>
+<li>主机2收到了主机1发送的FIN报文段，向主机1回一个ACK报文段，Acknowledgment Number为Sequence Number加1；主机1进入FIN_WAIT_2状态；主机2告诉主机1，我“同意”你的关闭请求；</li>
+</ul>
+<p>第三次挥手：</p>
+<ul>
+<li>主机2向主机1发送FIN报文段，请求关闭连接，同时主机2进入LAST_ACK状态；</li>
+</ul>
+<p>第四次挥手：</p>
+<ul>
+<li>主机1收到主机2发送的FIN报文段，向主机2发送ACK报文段，然后主机1进入TIME_WAIT状态；主机2收到主机1的ACK报文段以后，就关闭连接；此时，主机1等待2MSL后依然没有收到回复，则证明Server端已正常关闭，那好，主机1也可以关闭连接了。</li>
+</ul>
+<h5 id="三、为什么要三次握手？"><a href="#三、为什么要三次握手？" class="headerlink" title="三、为什么要三次握手？"></a>三、为什么要三次握手？</h5><p>为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误。</p>
+<p>谢希仁《计算机网络》书中的举例：<br>“已失效的连接请求报文段”的产生在这样一种情况下：client发出的第一个连接请求报文段并没有丢失，而是在某个网络结点长时间的滞留了，以致延误到连接释放以后的某个时间才到达server。本来这是一个早已失效的报文段。但server收到此失效的连接请求报文段后，就误认为是client再次发出的一个新的连接请求。于是就向client发出确认报文段，同意建立连接。假设不采用“三次握手”，那么只要server发出确认，新的连接就建立了。由于现在client并没有发出建立连接的请求，因此不会理睬server的确认，也不会向server发送数据。但server却以为新的运输连接已经建立，并一直等待client发来数据。这样，server的很多资源就白白浪费掉了。采用“三次握手”的办法可以防止上述现象发生。例如刚才那种情况，client不会向server的确认发出确认。server由于收不到确认，就知道client并没有要求建立连接。”</p>
+<p>所以主要目的防止server端一直等待，浪费资源。</p>
+<h5 id="四、为什么要四次挥手？"><a href="#四、为什么要四次挥手？" class="headerlink" title="四、为什么要四次挥手？"></a>四、为什么要四次挥手？</h5><p>TCP是全双工模式，这就意味着，当主机1发出FIN报文段时，只是表示主机1已经没有数据要发送了，主机1告诉主机2，它的数据已经全部发送完毕了；但是，这个时候主机1还是可以接受来自主机2的数据；当主机2返回ACK报文段时，表示它已经知道主机1没有数据发送了，但是主机2还是可以发送数据到主机1的；当主机2也发送了FIN报文段时，这个时候就表示主机2也没有数据要发送了，就会告诉主机1，我也没有数据要发送，之后就会中断这次TCP连接。</p>
+<p><strong>四次挥手过程的状态变化：</strong></p>
+<p><strong>FIN_WAIT_1:</strong></p>
+<ul>
+<li>其实FIN_WAIT_1和FIN_WAIT_2状态的真正含义都是表示等待对方的FIN报文。而这两种状态的区别是：FIN_WAIT_1状态实际上是当SOCKET在ESTABLISHED状态时，它想主动关闭连接，向对方发送了FIN报文，此时该SOCKET即进入到FIN_WAIT_1状态。而当对方回应ACK报文后，则进入到FIN_WAIT_2状态，当然在实际的正常情况下，无论对方何种情况下，都应该马上回应ACK报文，所以FIN_WAIT_1状态一般是比较难见到的，而FIN_WAIT_2状态还有时常常可以用netstat看到。（主动方）</li>
+</ul>
+<p><strong>FIN_WAIT_2：</strong></p>
+<ul>
+<li>实际上FIN_WAIT_2状态下的SOCKET，表示半连接，也即有一方要求close连接，但另外还告诉对方，我暂时还有点数据需要传送给你(ACK信息)，稍后再关闭连接。（主动方）</li>
+</ul>
+<p><strong>CLOSE_WAIT：</strong></p>
+<ul>
+<li>这种状态的含义其实是表示在等待关闭。怎么理解呢？当对方close一个SOCKET后发送FIN报文给自己，你系统毫无疑问地会回应一个ACK报文给对方，此时则进入到CLOSE_WAIT状态。接下来呢，实际上你真正需要考虑的事情是察看你是否还有数据发送给对方，如果没有的话，那么你也就可以 close这个SOCKET，发送FIN报文给对方，也即关闭连接。所以你在CLOSE_WAIT状态下，需要完成的事情是等待你去关闭连接。（被动方）</li>
+</ul>
+<p><strong>LAST_ACK:</strong></p>
+<ul>
+<li>它是被动关闭一方在发送FIN报文后，最后等待对方的ACK报文。当收到ACK报文后，也即可以进入到CLOSED可用状态了。（被动方）</li>
+</ul>
+<p><strong>TIME_WAIT:</strong></p>
+<ul>
+<li>表示收到了对方的FIN报文，并发送出了ACK报文，就等2MSL后即可回到CLOSED可用状态了。如果FINWAIT1状态下，收到了对方同时带FIN标志和ACK标志的报文时，可以直接进入到TIME_WAIT状态，而无须经过FIN_WAIT_2状态。（主动方）</li>
+</ul>
+<p><strong>CLOSED:</strong></p>
+<ul>
+<li>表示连接中断。</li>
+</ul>
+<h4 id="2-http2-0"><a href="#2-http2-0" class="headerlink" title="2.http2.0"></a>2.http2.0</h4><p><img src="/medias/img/32.jpg" alt></p>
+<p>HTTP/1.1已经为我们服务了20年，而HTTP/2.0其实在2015就发布了，但是还没有推广开来，关于HTTP/2.0新特性大家也可以去网上查阅相关资料</p>
+<h4 id="3-http-amp-rpc"><a href="#3-http-amp-rpc" class="headerlink" title="3.http&amp;rpc"></a>3.http&amp;rpc</h4><p>因为http响应慢、请求头体积大等缺点，所以在微服务时代，大家都使用rpc来调用服务，rpc相关概念感兴趣同学自行网上学习。</p>
+<h4 id="4-http-amp-https"><a href="#4-http-amp-https" class="headerlink" title="4.http&amp;https"></a>4.http&amp;https</h4><p>http还有两个很大的缺点就是明文且不能保证完整性，所以目前会渐渐被HTTPS代替</p>
+
+            </div>
+            <hr/>
+
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            <div class="reprint">
+                <p>
+                    <span class="reprint-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://gaoxiaofan.xyz" class="b-link-green">高晓凡的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/2019/05/28/HTTP详解/" class="b-link-green">HTTP详解</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+    <div class="livere-card card" data-aos="fade-up">
+    <!-- 来必力City版安装代码 -->
+    <div id="lv-container" class="card-content" data-id="city" data-uid="MTAyMC80NDE1NC8yMDY4OA==">
+        <script type="text/javascript">
+            (function (d, s) {
+                let j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') {
+                    return;
+                }
+
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript。</noscript>
+    </div>
+    <!-- City版安装代码已完成 -->
+</div>
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2019/05/30/python3多线程/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="python3多线程">
+                        
+                        <span class="card-title">python3多线程</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">线程介绍每个独立的线程有一个程序运行的入口、顺序执行序列和程序的出口。但是线程不能够独立执行，必须依存在应用程序中，由应用程序提供多个线程执行控制。
+每个线程都有他自己的一组CPU寄存器，称为线程的上下文，该上下文反映了线程上次运行该线程的</div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-30
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                    技术
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/python3/" target="_blank">
+                        <span class="chip bg-color">python3</span>
+                    </a>
+                    
+                    <a href="/tags/多线程/" target="_blank">
+                        <span class="chip bg-color">多线程</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2019/05/25/Scrapy爬虫框架使用ip代理池/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="Scrapy爬虫框架使用ip代理池">
+                        
+                        <span class="card-title">Scrapy爬虫框架使用ip代理池</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">一、手动更新IP池方法一：1.在settings配置文件中新增IP池:
+IPPOOL=[  
+{&quot;ipaddr&quot;:&quot;61.129.70.131:8080&quot;},  
+{&quot;ipaddr&quot</div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                    技术
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/爬虫/" target="_blank">
+                        <span class="chip bg-color">爬虫</span>
+                    </a>
+                    
+                    <a href="/tags/ip代理池/" target="_blank">
+                        <span class="chip bg-color">ip代理池</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            
+
+            
+			
+                <br>
+                
+                <span id="busuanzi_container_site_pv">
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+                </span>
+                
+                
+                <span id="busuanzi_container_site_uv">
+                    <i class="fa fa-users"></i>
+                    次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                </span>
+                
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="gaoxiaofan0530" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:gaoxiaofan0419@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1774289194" class="tooltipped" data-tooltip="QQ联系我: 1774289194" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=13552238386" class="tooltipped" data-tooltip="wechat联系我: 13552238386" data-position="top" data-delay="50">
+    <i class="fa fa-wechat"></i>
+</a>
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+<!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+<!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+<script src="/libs/materialize/materialize.min.js"></script>
+<script src="/libs/masonry/masonry.pkgd.min.js"></script>
+<script src="/libs/aos/aos.js"></script>
+<script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+<script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+<script src="/js/matery.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    <script src="/libs/others/clicklove.js"></script>
+
+
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+
+
+</body>
+</html>

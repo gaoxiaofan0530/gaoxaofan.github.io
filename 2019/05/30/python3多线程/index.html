@@ -1,0 +1,1048 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="python3多线程, 高晓凡的博客">
+    <meta name="description" content="线程介绍每个独立的线程有一个程序运行的入口、顺序执行序列和程序的出口。但是线程不能够独立执行，必须依存在应用程序中，由应用程序提供多个线程执行控制。
+每个线程都有他自己的一组CPU寄存器，称为线程的上下文，该上下文反映了线程上次运行该线程的">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>python3多线程 | 高晓凡的博客</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    <style type="text/css">
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+</head>
+
+
+<body>
+
+<header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <span class="logo-span">高晓凡的博客</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <div class="logo-name">高晓凡的博客</div>
+        <div class="logo-desc">
+            
+            代码改变世界，努力改变人生
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/gaoxiaofan0530/gaoxiaofan.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/gaoxiaofan0530/gaoxiaofan.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        python3多线程
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/python3/" target="_blank">
+                                <span class="chip bg-color">python3</span>
+                            </a>
+                        
+                            <a href="/tags/多线程/" target="_blank">
+                                <span class="chip bg-color">多线程</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                技术
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-05-30
+                </div>
+
+                
+				
+				
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="线程介绍"><a href="#线程介绍" class="headerlink" title="线程介绍"></a>线程介绍</h2><p>每个独立的线程有一个程序运行的入口、顺序执行序列和程序的出口。但是线程不能够独立执行，必须依存在应用程序中，由应用程序提供多个线程执行控制。</p>
+<p>每个线程都有他自己的一组CPU寄存器，称为线程的上下文，该上下文反映了线程上次运行该线程的CPU寄存器的状态。</p>
+<p>指令指针和堆栈指针寄存器是线程上下文中两个最重要的寄存器，线程总是在进程得到上下文中运行的，这些地址都用于标志拥有线程的进程地址空间中的内存。</p>
+<ul>
+<li>线程可以被抢占（中断）。</li>
+<li>在其他线程正在运行时，线程可以暂时搁置（也称为睡眠） – 这就是线程的退让。</li>
+</ul>
+<p>线程可以分为:</p>
+<ul>
+<li>内核线程：由操作系统内核创建和撤销。`</li>
+<li>用户线程：不需要内核支持而在用户程序中实现的线程。`</li>
+</ul>
+<p>Python3 线程中常用的两个模块为：</p>
+<ul>
+<li>_thread</li>
+<li>threading(推荐使用)</li>
+</ul>
+<h2 id="函数式"><a href="#函数式" class="headerlink" title="函数式"></a>函数式</h2><p>调用 _thread 模块中的start_new_thread()函数来产生新线程。语法如下:</p>
+<pre><code>_thread.start_new_thread ( function, args[, kwargs] )</code></pre><p>参数说明:</p>
+<ul>
+<li>function：线程函数。</li>
+<li>args：传递给线程函数的参数,他必须是个tuple类型。</li>
+<li>kwargs：可选参数。</li>
+</ul>
+<pre><code>import _thread, time
+# 定义线程函数
+def print_time(threadName, delay):
+   count = 0
+   while count &lt; 5:
+       time.sleep(delay)
+       count += 1
+       # 返回当前时间的时间戳（1970纪元后经过的浮点秒数）, 并格式化输出
+       print(&quot;{}: {}&quot;.format(threadName, time.ctime(time.time()) ))
+try:
+   _thread.start_new_thread( print_time, (&quot;Thread-1&quot;, 2))
+   _thread.start_new_thread( print_time, (&quot;Thread-2&quot;, 4))
+except:
+   print(&quot;Error&quot;)
+
+while 1:
+   # 让线程有足够的时间完成
+   pass
+
+E:\PyPro&gt;python thread.py
+Thread-1: Thu Apr 12 09:01:56 2018
+Thread-2: Thu Apr 12 09:01:58 2018
+Thread-1: Thu Apr 12 09:01:58 2018
+Thread-1: Thu Apr 12 09:02:00 2018
+Thread-2: Thu Apr 12 09:02:02 2018
+Thread-1: Thu Apr 12 09:02:02 2018
+Thread-1: Thu Apr 12 09:02:05 2018
+Thread-2: Thu Apr 12 09:02:06 2018
+Thread-2: Thu Apr 12 09:02:10 2018
+Thread-2: Thu Apr 12 09:02:14 2018</code></pre><h2 id="类封装式"><a href="#类封装式" class="headerlink" title="类封装式"></a>类封装式</h2><p>threading 模块除了包含 _thread 模块中的所有方法外，还提供的其他方法：</p>
+<ul>
+<li>threading.currentThread(): 返回当前的线程变量。</li>
+<li>threading.enumerate(): 返回一个包含正在运行的线程的list。正在运行指线程启动后、结束前，不包括启动前和终止后的线程。</li>
+<li>threading.activeCount(): 返回正在运行的线程数量，与len(threading.enumerate())有相同的结果。</li>
+</ul>
+<p>线程模块同样提供了Thread类来处理线程，Thread类提供了以下方法:</p>
+<ul>
+<li>run(): 用以表示线程活动的方法。</li>
+<li>start():启动线程活动。</li>
+<li>join([time]): 等待至线程中止。这阻塞调用线程直至线程的join() 方法被调用中止-正常退出或者抛出未处理的异常-或者是可选的超时发生。</li>
+<li>isAlive(): 返回线程是否活动的。</li>
+<li>getName(): 返回线程名。</li>
+<li>setName(): 设置线程名。</li>
+</ul>
+<pre><code>import threading, time
+# 创建进程类
+class myThread(threading.Thread):
+   # 构造函数
+   def __init__(self, threadID, name, counter):
+       threading.Thread.__init__(self)
+       self.threadID = threadID
+       self.name = name
+       self.counter = counter
+   # 重写run()
+   def run(self):
+       print(&quot;Thread Strat：&quot; + self.name)
+       print_time(self.name, self.counter, 5)
+       print(&quot;Thread Exit：&quot; + self.name)
+
+def print_time(threadName, delay, counter):
+   while counter:
+       time.sleep(delay)
+       print(&quot;{}: {}&quot;.format(threadName, time.ctime(time.time()) ))
+       counter -= 1    
+
+# 创建线程
+thread1 = myThread(1001, &quot;Thread-1&quot;, 1)
+thread2 = myThread(1002, &quot;Thread-2&quot;, 2)
+
+# 开启线程
+print(&quot;Thread-1 is Alive? &quot;, thread1.isAlive())
+thread1.start()
+thread2.start()
+print(&quot;Thread-1 is Alive? &quot;, thread1.isAlive())
+thread1.join()
+thread2.join()
+print(&quot;Thread-1 is Alive? &quot;, thread1.isAlive())
+print(&quot;exit&quot;)
+
+
+E:\PyPro&gt;python threadClass.py
+Thread-1 is Alive?  False
+Thread Strat：Thread-1
+Thread Strat：Thread-2
+Thread-1 is Alive?  True
+Thread-1: Thu Apr 12 10:15:53 2018
+Thread-1: Thu Apr 12 10:15:54 2018
+Thread-2: Thu Apr 12 10:15:54 2018
+Thread-1: Thu Apr 12 10:15:55 2018
+Thread-1: Thu Apr 12 10:15:56 2018
+Thread-2: Thu Apr 12 10:15:56 2018
+Thread-1: Thu Apr 12 10:15:57 2018
+Thread Exit：Thread-1
+Thread-2: Thu Apr 12 10:15:58 2018
+Thread-2: Thu Apr 12 10:16:00 2018
+Thread-2: Thu Apr 12 10:16:02 2018
+Thread Exit：Thread-2
+Thread-1 is Alive?  False
+exit</code></pre><p>不难发现，线程是通过start()函数激活，而不是对象建立时激活的！</p>
+<h2 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h2><p>多线程的优势在于可以同时运行多个任务（至少感觉起来是这样）。但是当线程需要共享数据时，可能存在数据不同步的问题。</p>
+<p>使用 Thread 对象的 Lock 和 Rlock 可以实现简单的线程同步，这两个对象都有 acquire 方法和 release 方法，对于那些需要每次只允许一个线程操作的数据，可以将其操作放到 acquire 和 release 方法之间。</p>
+<pre><code>import threading, time
+
+# 创建锁
+threadLock = threading.Lock()
+# 创建线程列表
+threads = []
+
+class myThread(threading.Thread):
+   def __init__(self, threadID, name, counter):
+       threading.Thread.__init__(self)
+       self.threadID = threadID
+       self.name = name
+       self.counter = counter
+
+   def run(self):
+       print(&quot;Thread Start: &quot; + self.name)
+       # 获取锁，同步线程
+       threadLock.acquire()
+       print_time(self.name, self.counter, 3)
+       # 释放锁，开启下一个线程
+       threadLock.release()
+       print(&quot;Thread Exit: &quot; + self.name)
+
+def print_time(threadName, delay, counter):
+   while counter:
+       time.sleep(delay)
+       print(&quot;{}: {}&quot;.format(threadName, time.ctime()))
+       counter -= 1
+
+
+# 创建线程
+thread1 = myThread(1001, &quot;Thread-1&quot;, 1)
+thread2 = myThread(1002, &quot;Thread-2&quot;, 2)
+
+# 开启线程
+thread1.start()
+thread2.start()
+
+# 添加线程列表
+threads.append(thread1)
+threads.append(thread2)
+
+# 等待所有线程完成
+for t in threads:
+   t.join()
+print(&quot;exit&quot;)
+
+
+E:\PyPro&gt;python synchronize.py
+Thread Start: Thread-1
+Thread Start: Thread-2
+Thread-1: Thu Apr 12 11:00:49 2018
+Thread-1: Thu Apr 12 11:00:50 2018
+Thread-1: Thu Apr 12 11:00:51 2018
+Thread Exit: Thread-1
+Thread-2: Thu Apr 12 11:00:53 2018
+Thread-2: Thu Apr 12 11:00:55 2018
+Thread-2: Thu Apr 12 11:00:57 2018
+Thread Exit: Thread-2
+exit</code></pre><h2 id="线程优先级队列"><a href="#线程优先级队列" class="headerlink" title="线程优先级队列"></a>线程优先级队列</h2><p>Python 的 Queue 模块中提供了同步的、线程安全的队列类，包括FIFO队列Queue，LIFO队列LifoQueue，和优先级队列 PriorityQueue。</p>
+<p>这些队列都实现了锁原语，能够在多线程中直接使用，可以使用队列来实现线程间的同步。</p>
+<p>Queue 模块中的常用方法:</p>
+<ul>
+<li>Queue.qsize() 返回队列的大小</li>
+<li>Queue.empty() 如果队列为空，返回True,反之False</li>
+<li>Queue.full() 如果队列满了，返回True,反之False</li>
+<li>Queue.full 与 maxsize 大小对应</li>
+<li>Queue.get([block[, timeout]])获取队列，timeout等待时间</li>
+<li>Queue.get_nowait() 相当Queue.get(False)</li>
+<li>Queue.put(item) 写入队列，timeout等待时间</li>
+<li>Queue.put_nowait(item) 相当Queue.put(item, False)</li>
+<li>Queue.task_done() 在完成一项工作之后，Queue.task_done()函数向任务已经完成的队列发送一个信号</li>
+<li>Queue.join() 实际上意味着等到队列为空，再执行别的操作</li>
+</ul>
+<pre><code>import queue, threading, time
+
+exitFlag = 0
+# 创建锁
+queueLock = threading.Lock()
+# 创建队列
+workQueue = queue.Queue(10)
+
+class myThread(threading.Thread):
+   def __init__(self, threadID, name, q):
+       threading.Thread.__init__(self)
+       self.threadID = threadID
+       self.name = name
+       self.q = q
+
+   def run(self):
+       print(&quot;Thread Start: &quot; + self.name)
+       process_data(self.name, self.q)
+       print(&quot;Thread Exit: &quot; + self.name)
+
+def process_data(threadName, q):
+   while not exitFlag:
+       queueLock.acquire()
+       if not workQueue.empty():
+           data = q.get()
+           queueLock.release()
+           print(&quot;{} processing {}&quot;.format(threadName, data))
+       else:
+           queueLock.release()
+       time.sleep(1)
+
+threadList = [&quot;Thread-1&quot;, &quot;Thread-2&quot;, &quot;Thread-3&quot;]
+nameList = [&quot;One&quot;, &quot;Two&quot;, &quot;Three&quot;, &quot;Four&quot;, &quot;Five&quot;]
+threads = []
+threadID = 1
+
+
+# 创建新线程
+for tName in threadList:
+   thread = myThread(threadID, tName, workQueue)
+   thread.start()
+   threads.append(thread)
+   threadID += 1
+
+# 填充队列
+queueLock.acquire()
+print(&quot;队列填充中&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;)
+time.sleep(1)
+for word in nameList:
+   workQueue.put(word)
+print(&quot;队列填充完毕&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;)
+queueLock.release()
+
+# 等待队列清空
+while not workQueue.empty():
+   pass
+
+# 通知线程退出
+exitFlag = 1
+
+# 等待所有线程完成
+for t in threads:
+   t.join()
+print(&quot;exit&quot;)
+
+
+E:\PyPro&gt;python queueue.py
+Thread Start: Thread-1
+Thread Start: Thread-2
+Thread Start: Thread-3
+队列填充中&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+队列填充完毕&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+Thread-3 processing One
+Thread-1 processing Two
+Thread-2 processing Three
+Thread-3 processing Four
+Thread-1 processing Five
+Thread Exit: Thread-2
+Thread Exit: Thread-1
+Thread Exit: Thread-3
+exit</code></pre><p><code>源码中其实实现了三个进程读取同一个队列，按照先进先出原则实现锁定。</code></p>
+<p>用start方法来启动线程，真正实现了多线程运行，这时无需等待run方法体代码执行完毕而直接继续执行下面的代码。通过调用Thread类的start()方法来启动一个线程，这时此线程处于就绪（可运行）状态，并没有运行，一旦得到cpu时间片，就开始执行run()方法，这里方法 run()称为线程体，它包含了要执行的这个线程的内容，Run方法运行结束，此线程随即终止。</p>
+<p>join的作用是保证当前线程执行完成后，再执行其它线程。join可以有timeout参数，表示阻塞其它线程timeout秒后，不再阻塞。。一般线程的start()之后，所有操作结束后都要进行thread.join()。<code>确保语句的输出是join()后面的程序是等线程结束后再执行的。</code></p>
+
+            </div>
+            <hr/>
+
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            <div class="reprint">
+                <p>
+                    <span class="reprint-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://gaoxiaofan.xyz" class="b-link-green">高晓凡的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/2019/05/30/python3多线程/" class="b-link-green">python3多线程</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+    <div class="livere-card card" data-aos="fade-up">
+    <!-- 来必力City版安装代码 -->
+    <div id="lv-container" class="card-content" data-id="city" data-uid="MTAyMC80NDE1NC8yMDY4OA==">
+        <script type="text/javascript">
+            (function (d, s) {
+                let j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') {
+                    return;
+                }
+
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript。</noscript>
+    </div>
+    <!-- City版安装代码已完成 -->
+</div>
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2019/05/30/一张图让你明白反爬虫与爬虫手段/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="一张图让你明白反爬虫与爬虫手段">
+                        
+                        <span class="card-title">一张图让你明白反爬虫与爬虫手段</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">爬虫与发爬虫的厮杀，一方为了拿到数据，一方为了防止爬虫拿到数据，谁是最后的赢家？
+爬虫中的一些概念爬虫:自动获取网站数据的程序
+
+反爬虫：使用技术手段防止爬虫程序爬取数据
+
+误伤：反爬虫技术将普通用户识别为爬虫，这种情况多出现在封ip中，例</div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-30
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                    技术
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/爬虫/" target="_blank">
+                        <span class="chip bg-color">爬虫</span>
+                    </a>
+                    
+                    <a href="/tags/反爬虫/" target="_blank">
+                        <span class="chip bg-color">反爬虫</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2019/05/28/HTTP详解/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="HTTP详解">
+                        
+                        <span class="card-title">HTTP详解</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">网络是由若干节点和连接这些节点的链路构成，然后网络与网络之间所串连成的庞大网络叫做互联网，而我们今天要讲的HTTP（HyperText Transfer Protocol 超文本传输协议)是互联网上应用最为广泛的一种网络协议，它是由万维网协</div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-28
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                    技术
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/HTTP/" target="_blank">
+                        <span class="chip bg-color">HTTP</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            
+
+            
+			
+                <br>
+                
+                <span id="busuanzi_container_site_pv">
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+                </span>
+                
+                
+                <span id="busuanzi_container_site_uv">
+                    <i class="fa fa-users"></i>
+                    次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                </span>
+                
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="gaoxiaofan0530" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:gaoxiaofan0419@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1774289194" class="tooltipped" data-tooltip="QQ联系我: 1774289194" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=13552238386" class="tooltipped" data-tooltip="wechat联系我: 13552238386" data-position="top" data-delay="50">
+    <i class="fa fa-wechat"></i>
+</a>
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+<!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+<!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+<script src="/libs/materialize/materialize.min.js"></script>
+<script src="/libs/masonry/masonry.pkgd.min.js"></script>
+<script src="/libs/aos/aos.js"></script>
+<script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+<script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+<script src="/js/matery.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    <script src="/libs/others/clicklove.js"></script>
+
+
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+
+
+</body>
+</html>

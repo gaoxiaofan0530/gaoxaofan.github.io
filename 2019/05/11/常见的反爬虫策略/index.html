@@ -1,0 +1,778 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="常见的反爬虫策略, 高晓凡的博客">
+    <meta name="description" content="随之大数据的火热，网络上各种网页抓取/爬虫工具蜂拥而来，因而，网页数据成了大家竞争掠夺的资源，但网站运营者却要开始保护自己的数据资源，以避免被竞争对手获取到自己的数据，防止更大的商业损失。下面总结一下反爬虫策略及其应对方法。
+一、什么是爬虫">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>常见的反爬虫策略 | 高晓凡的博客</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    <style type="text/css">
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+</head>
+
+
+<body>
+
+<header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <span class="logo-span">高晓凡的博客</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <div class="logo-name">高晓凡的博客</div>
+        <div class="logo-desc">
+            
+            代码改变世界，努力改变人生
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/gaoxiaofan0530/gaoxiaofan.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/gaoxiaofan0530/gaoxiaofan.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        常见的反爬虫策略
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/反爬虫/" target="_blank">
+                                <span class="chip bg-color">反爬虫</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                技术
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-05-11
+                </div>
+
+                
+				
+				
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>随之大数据的火热，网络上各种网页抓取/爬虫工具蜂拥而来，因而，网页数据成了大家竞争掠夺的资源，但网站运营者却要开始保护自己的数据资源，以避免被竞争对手获取到自己的数据，防止更大的商业损失。下面总结一下反爬虫策略及其应对方法。</p>
+<h3 id="一、什么是爬虫和反爬虫"><a href="#一、什么是爬虫和反爬虫" class="headerlink" title="一、什么是爬虫和反爬虫"></a>一、什么是爬虫和反爬虫</h3><p>爬虫和反爬虫作为相生相克的死对头，无论爬虫多厉害，都是能被复杂的反爬虫机制发现，同样的，无论反爬虫机制多么缜密，都是能被高级的网络爬虫所攻破，胜负的关键就看双方的资源投入多少了。为了更好地理解爬虫和反爬虫机制，下面有一些定义：</p>
+<pre><code>爬虫：使用任何技术手段，批量获取网站信息的一种方式。关键在于批量。 反爬虫：使用任何技术手段，阻止别人批量获取自己网站信息的一种方式。关键也在于批量。
+
+误伤：在反爬虫的过程中，错误的将普通用户识别为爬虫。误伤率高的反爬虫策略，效果再好也不能用。
+
+拦截：成功地阻止爬虫访问。这里会有拦截率的概念。通常来说，拦截率越高的反爬虫策略，误伤的可能性就越高。因此需要做个权衡。</code></pre><p>所以，我们可以知道，爬虫有一个最基本的特征就是批量，而反爬虫机制也是根据这个特征来做判断的，但反爬虫还是一个权衡利弊的选择，既要较低的误伤率，又要较高的拦截率，这也是它的漏洞。关于网站为什么以及如何制定反爬虫策略，可以看携程酒店技术部总结的关于反爬虫的心得体会。</p>
+<h3 id="二、反爬虫方法及其应对"><a href="#二、反爬虫方法及其应对" class="headerlink" title="二、反爬虫方法及其应对"></a>二、反爬虫方法及其应对</h3><p>一般网站从三个方面反爬虫：请求网站访问时的请求头Headers，用户行为，目标网站的目录和数据加载方式。前两个方面可以说是反爬虫策略中最为常见的，而第三个则是应用ajax（异步加载）的方式加载页面目录或者内容，增大爬虫在对目标网站形成访问之后获取数据的难度。</p>
+<p>但是仅仅检验一下请求头或者做几个ip限制显然无法达到网站运营者对anti-spam的要求，所以更进一步的反制措施也不少。最主要的大概有：Cookie限制，验证码反爬虫，以及Noscript。</p>
+<h4 id="2-1-通过Headers反爬虫"><a href="#2-1-通过Headers反爬虫" class="headerlink" title="2.1 通过Headers反爬虫"></a>2.1 通过Headers反爬虫</h4><pre><code>从用户请求的Headers反爬虫是最常见的反爬虫策略。由于正常用户访问网站时是通过浏览器访问的，所以目标网站通常会在收到请求时校验Headers中的User-Agent字段，如果不是携带正常的User-Agent信息的请求便无法通过请求。还有一部分网站为了防盗链，还会校验请求Headers中的Referer字段。 如果遇到了这类反爬虫机制，可以直接在自己写的爬虫中添加Headers，将浏览器的User-Agent复制到爬虫的Headers中；另外通过对请求的抓包分析，将Referer值修改为目标网站域名，就能很好的绕过。</code></pre><h4 id="2-2-基于用户行为反爬虫"><a href="#2-2-基于用户行为反爬虫" class="headerlink" title="2.2 基于用户行为反爬虫"></a>2.2 基于用户行为反爬虫</h4><p>还有一些网站会通过用户的行为来检测网站的访问者是否是爬虫，例如同一IP短时间内多次访问同一页面，或者同一账户短时间内多次进行相同操作。 大多数网站都是前一种情况，对于这种情况有两种策略：</p>
+<pre><code>1）使用代理ip。例如可以专门写一个在网上抓取可用代理ip的脚本，然后将抓取到的代理ip维护到代理池中供爬虫使用，当然，实际上抓取的ip不论是免费的还是付费的，通常的使用效果都极为一般，如果需要抓取高价值数据的话也可以考虑购买宽带adsl拨号的VPS，如果ip被目标网站被封掉，重新拨号即可。
+
+2）降低请求频率。例如每个一个时间段请求一次或者请求若干次之后sleep一段时间。由于网站获取到的ip是一个区域网的ip，该ip被区域内的所有人共享，因此这个间隔时间并不需要特别长</code></pre><p>对于第二种情况，可以在每次请求后随机间隔几秒再进行下一次请求。对于有逻辑漏洞的网站，可以通过请求几次，退出登录，重新登录，继续请求来绕过同一账号短时间内不能多次进行相同请求的限制，如果能有多个账户，切换使用，效果更佳。</p>
+<h4 id="2-3-动态页面的反爬虫"><a href="#2-3-动态页面的反爬虫" class="headerlink" title="2.3 动态页面的反爬虫"></a>2.3 动态页面的反爬虫</h4><p>上述的几种情况大多都是出现在静态页面，但是对于动态网页，我们需要爬取的数据是通过ajax请求得到，或者通过JavaScript生成的。首先用Firebug或者HttpFox对网络请求进行分析。如果能够找到ajax请求，也能分析出具体的参数和响应的具体含义，我们就能采用上面的方法，直接利用requests或者urllib2模拟ajax请求，对响应的json进行分析得到需要的数据。</p>
+<p>能够直接模拟ajax请求获取数据固然是极好的，但是有些网站把ajax请求的所有参数全部加密了。我们根本没办法构造自己所需要的数据的请求。还有一些严防死守的网站，除了加密ajax参数，它还把一些基本的功能都封装了，全部都是在调用自己的接口，而接口参数都是加密的。</p>
+<p>遇到这样的网站，我们就不能用上面的方法了，通过selenium+phantomJS框架，调用浏览器内核，并利用phantomJS执行js来模拟人为操作以及触发页面中的js脚本。从填写表单到点击按钮再到滚动页面，全部都可以模拟，不考虑具体的请求和响应过程，只是完完整整的把人浏览页面获取数据的过程模拟一遍。用这套框架几乎能绕过大多数的反爬虫，因为它不是在伪装成浏览器来获取数据（上述的通过添加</p>
+<p>Headers一定程度上就是为了伪装成浏览器），它本身就是浏览器，phantomJS就是一个没有界面的浏览器，只是操控这个浏览器的不是人。</p>
+<h4 id="2-4-Cookie限制"><a href="#2-4-Cookie限制" class="headerlink" title="2.4 Cookie限制"></a>2.4 Cookie限制</h4><p>和Headers校验的反爬虫机制类似，当用户向目标网站发送请求时，会再请求数据中携带Cookie，网站通过校验请求信息是否存在Cookie，以及校验Cookie的值来判定发起访问请求的到底是真实的用户还是爬虫，第一次打开网页会生成一个随机cookie，如果再次打开网页这个Cookie不存在，那么再次设置，第三次打开仍然不存在，这就非常有可能是爬虫在工作了。</p>
+<p>而Cookie校验和Headers的区别在于，用户发送的Headers的内容形式是固定的可以被轻易伪造的，Cookie则不然。原因是由于，我们在分析浏览器请求网站访问的过程中所分析得到的Cookie往往都是经过相关的js等过程已经改变了domain的Cookie，假如直接手动修改爬虫携带的Cookie去访问对应的网页，由于携带的Cookie已经是访问之后的domain而不是访问之前的domain，所以是无法成功模拟整个流程的，这种情况必然导致爬虫访问页面失败。 分析Cookie，可能会携带大量的随机哈希字符串，或者不同时间戳组合的字符串，并且会根据每次访问更新domain的值。对这种限制，首先要在对目标网站抓包分析时，必须先清空浏览器的Cookie，然后在初次访问时，观察浏览器在完成访问的过程中的请求细节（通常会在这一过程中发生若干次301/302转跳，每次转跳网站返回不同的Cookie给浏览器然后在最后一次转跳中请求成功）。在抓包完成对请求细节的分析之后，再在爬虫上模拟这一转跳过程，然后截取Cookie作为爬虫自身携带的Cookie，这样就能够绕过Cookie的限制完成对目标网站的访问了。</p>
+<h4 id="2-5-验证码限制"><a href="#2-5-验证码限制" class="headerlink" title="2.5 验证码限制"></a>2.5 验证码限制</h4><p>这是一个相当古老但却不失有效性的反爬虫策略。更早的时候，这种验证码可以通过OCR技术进行简单的图像识别破解，但是现在来说，验证码的干扰线，噪点已经多到肉眼都无法轻易识别的地步。所以目前而言，由于OCR技术发展不力，验证码技术反而成为了许多网站最有效的手段之一。</p>
+<p>验证码除了识别难题之外，还有另外一个值得注意的问题。现在有许多网站都在使用第三方验证码服务。当用户打开目标网站的登录页面时，登录页面显示的验证码是从第三方(比如阿里云)提供的链接加载的，这时候我们在模拟登录的时候，需要多一步从网页提供的第三方链接抓取验证码的步骤，而这一步常常暗含着陷阱。以阿里云提供的验证码服务为例，登录页面的源代码会显示阿里云提供的第三方链接，但是当匹配出这个链接进行验证码抓取的时候我们会发现验证码是无效的。当仔细分析抓包的请求数据之后，发现正常浏览器在请求验证码时，会多带一个ts参数，而这个参数是由当前时间戳产生的，但是并不是完全的时间戳，而是时间戳四舍五入保留九位数字之后的字符串，对待这种第三方服务只能是细心加运气，三分天注定七分不信命来猜一发了。还有另外一种特殊的第三方验证码，所谓的拖动验证，只能说，互联网创业有三种模式2b，2c，2vc。</p>
+
+            </div>
+            <hr/>
+
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            <div class="reprint">
+                <p>
+                    <span class="reprint-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://gaoxiaofan.xyz" class="b-link-green">高晓凡的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/2019/05/11/常见的反爬虫策略/" class="b-link-green">常见的反爬虫策略</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+    <div class="livere-card card" data-aos="fade-up">
+    <!-- 来必力City版安装代码 -->
+    <div id="lv-container" class="card-content" data-id="city" data-uid="MTAyMC80NDE1NC8yMDY4OA==">
+        <script type="text/javascript">
+            (function (d, s) {
+                let j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') {
+                    return;
+                }
+
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript。</noscript>
+    </div>
+    <!-- City版安装代码已完成 -->
+</div>
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2019/05/11/git分支/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="git分支">
+                        
+                        <span class="card-title">git分支</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">1.何为分支几乎每一种版本控制系统都以某种形式支持分支。使用分支意味着你可以从开发主线上分离开来，然后在不影响主线的同时继续工作。
+
+2.主分支Master首先，代码库应该有一个、且仅有一个主分支。所有提供给用户使用的正式版本，都在这个主分</div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-11
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                    技术
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/git/" target="_blank">
+                        <span class="chip bg-color">git</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                本篇&nbsp;<i class="fa fa-dot-circle-o"></i>
+            </div>
+            <div class="card">
+                <a href="/2019/05/11/常见的反爬虫策略/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="常见的反爬虫策略">
+                        
+                        <span class="card-title">常见的反爬虫策略</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">随之大数据的火热，网络上各种网页抓取/爬虫工具蜂拥而来，因而，网页数据成了大家竞争掠夺的资源，但网站运营者却要开始保护自己的数据资源，以避免被竞争对手获取到自己的数据，防止更大的商业损失。下面总结一下反爬虫策略及其应对方法。
+一、什么是爬虫</div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-11
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                    技术
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/反爬虫/" target="_blank">
+                        <span class="chip bg-color">反爬虫</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            
+
+            
+			
+                <br>
+                
+                <span id="busuanzi_container_site_pv">
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+                </span>
+                
+                
+                <span id="busuanzi_container_site_uv">
+                    <i class="fa fa-users"></i>
+                    次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                </span>
+                
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="gaoxiaofan0530" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:gaoxiaofan0419@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1774289194" class="tooltipped" data-tooltip="QQ联系我: 1774289194" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=13552238386" class="tooltipped" data-tooltip="wechat联系我: 13552238386" data-position="top" data-delay="50">
+    <i class="fa fa-wechat"></i>
+</a>
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+<!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+<!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+<script src="/libs/materialize/materialize.min.js"></script>
+<script src="/libs/masonry/masonry.pkgd.min.js"></script>
+<script src="/libs/aos/aos.js"></script>
+<script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+<script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+<script src="/js/matery.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    <script src="/libs/others/clicklove.js"></script>
+
+
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+
+
+</body>
+</html>
