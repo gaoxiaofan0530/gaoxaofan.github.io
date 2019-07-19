@@ -8,10 +8,8 @@
     <meta name="description" content="分布式爬虫和爬虫的区别是什么？难道仅仅是多了”分布式”三个字？
 1.原理1.1 对比Scrapy与Scrapy-Redis架构图
 Scrapy架构图
-
 Scrapy-Redis架构图
-
-从上图可以看出对比可以看出，多了一个redis组件，主">
+从上图可以看出对比可以看出，多了一个redis组件，主要影">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -407,27 +405,29 @@ Scrapy-Redis架构图
             <div id="articleContent">
                 <p>分布式爬虫和爬虫的区别是什么？难道仅仅是多了”分布式”三个字？</p>
 <h3 id="1-原理"><a href="#1-原理" class="headerlink" title="1.原理"></a>1.原理</h3><h4 id="1-1-对比Scrapy与Scrapy-Redis架构图"><a href="#1-1-对比Scrapy与Scrapy-Redis架构图" class="headerlink" title="1.1 对比Scrapy与Scrapy-Redis架构图"></a>1.1 对比Scrapy与Scrapy-Redis架构图</h4><ul>
-<li><p>Scrapy架构图<br><img src="/medias/img/34.png" alt></p>
-</li>
-<li><p>Scrapy-Redis架构图<br><img src="/medias/img/35.png" alt></p>
-</li>
-<li><p>从上图可以看出对比可以看出，多了一个redis组件，主要影响两处：一处是<strong>调度器</strong>。另一处是<strong>数据处理</strong></p>
+<li>Scrapy架构图<br><img src="/medias/img/34.png" alt></li>
+<li>Scrapy-Redis架构图<br><img src="/medias/img/35.png" alt></li>
+<li>从上图可以看出对比可以看出，多了一个redis组件，主要影响两处：一处是<strong>调度器</strong>。另一处是<strong>数据处理</strong></li>
+</ul>
 <h4 id="1-2-Scrapy-Redis分布式策略"><a href="#1-2-Scrapy-Redis分布式策略" class="headerlink" title="1.2 Scrapy-Redis分布式策略"></a>1.2 Scrapy-Redis分布式策略</h4><p><img src="/medias/img/36.png" alt></p>
-</li>
+<ul>
 <li><p>作为一个分布式爬虫，是需要有一个<strong>Master端（核心服务器)</strong> 的，在Master端，会搭建一个Redis数据库，用来存储start_urls、request、items。Master的职责是负责url指纹判重，Request的分配，以及数据的存储（一般在Master端会安装一个mongodb用来存储redis中的items）。除了Master之外，还有一个角色就是<strong>slaver（爬虫程序执行端)</strong> ，它主要负责执行爬虫程序爬取数据，并将爬取过程中新的Request提交到Master的redis数据库中。</p>
 </li>
 <li><p>如上图，假设我们有四台电脑：A， B， C， D ，其中任意一台电脑都可以作为 Master端 或 Slaver端。整个流程是：</p>
 <ul>
 <li>首先Slaver端从Master端拿任务（Request、url）进行数据抓取，Slaver抓取数据的同时，产生新任务的Request便提交给 Master 处理；</li>
-<li>Master端只有一个Redis数据库，负责将未处理的Request去重和任务分配，将处理后的Request加入待爬队列，并且存储爬取的数据。<br><img src="/medias/img/37.png" alt><br><img src="/medias/img/38.png" alt></li>
+<li>Master端只有一个Redis数据库，负责将未处理的Request去重和任务分配，将处理后的Request加入待爬队列，并且存储爬取的数据。</li>
 </ul>
 </li>
+</ul>
+<p><img src="/medias/img/37.png" alt><br><img src="/medias/img/38.png" alt></p>
+<ul>
 <li><p>Scrapy-Redis默认使用的就是这种策略，我们实现起来很简单，因为任务调度等工作Scrapy-Redis都已经帮我们做好了，我们只需要继承RedisSpider、指定redis_key就行了。</p>
 </li>
 <li><p>缺点是，Scrapy-Redis调度的任务是Request对象，里面信息量比较大（不仅包含url，还有callback函数、headers等信息），可能导致的结果就是会降低爬虫速度、而且会占用Redis大量的存储空间，所以如果要保证效率，那么就需要一定硬件水平。</p>
-<h4 id="1-3-分布式原理"><a href="#1-3-分布式原理" class="headerlink" title="1.3 分布式原理"></a>1.3 分布式原理</h4><p>scrapy-redis实现分布式，其实从原理上来说很简单，这里为描述方便，我们把自己的核心服务器称为 master，而把用于跑爬虫程序的机器称为 slave。</p>
 </li>
 </ul>
+<h4 id="1-3-分布式原理"><a href="#1-3-分布式原理" class="headerlink" title="1.3 分布式原理"></a>1.3 分布式原理</h4><p>scrapy-redis实现分布式，其实从原理上来说很简单，这里为描述方便，我们把自己的核心服务器称为 master，而把用于跑爬虫程序的机器称为 slave。</p>
 <p>回顾 scrapy 框架，我们首先给定一些start_urls，spider 最先访问 start_urls 里面的 url，再根据我们的 parse 函数，对里面的元素、或者是其他的二级、三级页面进行抓取。而要实现分布式，只需要在这个starts_urls里面做文章就行了。进一步描述如下：</p>
 <ol>
 <li>master 产生 starts_urls，url 会被封装成 request 放到 redis 中的 spider:requests，总的 scheduler 会从这里分配 request，当这里的 request 分配完后，会继续分配 start_urls 里的 url。</li>
@@ -539,10 +539,8 @@ Scrapy-Redis架构图
                     <div class="summary">分布式爬虫和爬虫的区别是什么？难道仅仅是多了”分布式”三个字？
 1.原理1.1 对比Scrapy与Scrapy-Redis架构图
 Scrapy架构图
-
 Scrapy-Redis架构图
-
-从上图可以看出对比可以看出，多了一个redis组件，主</div>
+从上图可以看出对比可以看出，多了一个redis组件，主要影</div>
                     <div class="publish-info">
                             <span class="publish-date">
                                 <i class="fa fa-clock-o fa-fw icon-date"></i>2019-07-11
