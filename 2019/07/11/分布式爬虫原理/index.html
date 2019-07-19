@@ -4,11 +4,12 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="进程和线程, 高晓凡的博客">
-    <meta name="description" content="进程、线程、协程基本概念和解释
-概念
-进程:进程是一个执行中的程序，是一个具有独立功能的程序在某个数据集上的一次运行活动。
-线程:线程是CPU分配资源的基本单位。但一个程序开始运行，这个程序就变成了一个进程，而一个进程相当于一个或者多个线程">
+    <meta name="keywords" content="分布式爬虫的介绍, 高晓凡的博客">
+    <meta name="description" content="分布式爬虫和爬虫的区别是什么？难道仅仅是多了”分布式”三个字？
+1.原理1.1 对比Scrapy与Scrapy-Redis架构图
+Scrapy架构图
+Scrapy-Redis架构图
+从上图可以看出对比可以看出，多了一个redis组件，主要影">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -16,7 +17,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>进程和线程 | 高晓凡的博客</title>
+    <title>分布式爬虫的介绍 | 高晓凡的博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -241,13 +242,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        进程和线程
+                        分布式爬虫的介绍
                     </div>
                 </div>
             </div>
@@ -358,12 +359,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/进程/" target="_blank">
-                                <span class="chip bg-color">进程</span>
+                            <a href="/tags/爬虫/" target="_blank">
+                                <span class="chip bg-color">爬虫</span>
                             </a>
                         
-                            <a href="/tags/线程/" target="_blank">
-                                <span class="chip bg-color">线程</span>
+                            <a href="/tags/分布式/" target="_blank">
+                                <span class="chip bg-color">分布式</span>
                             </a>
                         
                     </div>
@@ -386,7 +387,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-05-20
+                    2019-07-11
                 </div>
 
                 
@@ -402,56 +403,58 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="进程、线程、协程基本概念和解释"><a href="#进程、线程、协程基本概念和解释" class="headerlink" title="进程、线程、协程基本概念和解释"></a>进程、线程、协程基本概念和解释</h1><ul>
-<li><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
-<li>进程:<code>进程是一个执行中的程序，是一个具有独立功能的程序在某个数据集上的一次运行活动。</code></li>
-<li>线程:<code>线程是CPU分配资源的基本单位。但一个程序开始运行，这个程序就变成了一个进程，而一个进程相当于一个或者多个线程。线程是进程中的一个实体，是被系统独立调度和分派的基本单位。</code></li>
-<li>协程:<code>协程是一种比线程更加轻量级的存在，最重要的是，协程不被操作系统内核管理，协程是完全由程序控制的。</code></li>
-<li>并发:<code>在操作系统中，某一时间段，几个程序在同一个CPU上运行，但在任意一个时间点上，只有一个程序在CPU上运行。</code></li>
-<li>并行:<code>当操作系统有多个CPU时，一个CPU处理A线程，另一个CPU处理B线程，两个线程互相不抢占CPU资源，可以同时进行，这种方式成为并行。</code></li>
-<li>全局解释器锁(GIL):<code>首先需要明确一点就是，GIL并不是Python语言的特性，它是在现实Python解释器时引用的一个概念。GIL只在CPython解释器上存在。作用是保证同一时间内只有一个线程在执行。</code></li>
+                <p>分布式爬虫和爬虫的区别是什么？难道仅仅是多了”分布式”三个字？</p>
+<h3 id="1-原理"><a href="#1-原理" class="headerlink" title="1.原理"></a>1.原理</h3><h4 id="1-1-对比Scrapy与Scrapy-Redis架构图"><a href="#1-1-对比Scrapy与Scrapy-Redis架构图" class="headerlink" title="1.1 对比Scrapy与Scrapy-Redis架构图"></a>1.1 对比Scrapy与Scrapy-Redis架构图</h4><ul>
+<li>Scrapy架构图<br><img src="/medias/img/34.png" alt></li>
+<li>Scrapy-Redis架构图<br><img src="/medias/img/35.png" alt></li>
+<li>从上图可以看出对比可以看出，多了一个redis组件，主要影响两处：一处是<strong>调度器</strong>。另一处是<strong>数据处理</strong></li>
 </ul>
+<h4 id="1-2-Scrapy-Redis分布式策略"><a href="#1-2-Scrapy-Redis分布式策略" class="headerlink" title="1.2 Scrapy-Redis分布式策略"></a>1.2 Scrapy-Redis分布式策略</h4><p><img src="/medias/img/36.png" alt></p>
+<ul>
+<li><p>作为一个分布式爬虫，是需要有一个<strong>Master端（核心服务器)</strong> 的，在Master端，会搭建一个Redis数据库，用来存储start_urls、request、items。Master的职责是负责url指纹判重，Request的分配，以及数据的存储（一般在Master端会安装一个mongodb用来存储redis中的items）。除了Master之外，还有一个角色就是<strong>slaver（爬虫程序执行端)</strong> ，它主要负责执行爬虫程序爬取数据，并将爬取过程中新的Request提交到Master的redis数据库中。</p>
 </li>
-<li><h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
-<li>进程的特点:<ul>
-<li>动态性：<code>进程是程序的一次执行过程，动态产生，动态消亡。</code></li>
-<li>独立性：<code>进程是一个能独立运行的基本单元。是系统分配资源与调度的基本单元。</code></li>
-<li>并发性：<code>任何进程都可以与其他进程并发执行。</code></li>
-</ul>
-</li>
-<li>线程的特点:<ul>
-<li><code>线程自己不拥有系统资源，只拥有一点运行中必不可少的资源。</code></li>
-<li><code>同一进程中的多个线程并发执行，这些线程共享进程所拥有的资源。</code></li>
-</ul>
-</li>
-<li>协程的特点:<ul>
-<li><code>运行效率极高，协程的切换完全由程序控制，不像线程切换需要花费操作系统的开销,线程数量越多，协程的优势就越明显。</code></li>
-<li><code>协程不需要多线程的锁机制，因为只有一个线程，不存在变量冲突</code></li>
-<li><code>对于多核CPU，利用多进程+协程的方式，能充分利用CPU，获得极高的性能。</code></li>
+<li><p>如上图，假设我们有四台电脑：A， B， C， D ，其中任意一台电脑都可以作为 Master端 或 Slaver端。整个流程是：</p>
+<ul>
+<li>首先Slaver端从Master端拿任务（Request、url）进行数据抓取，Slaver抓取数据的同时，产生新任务的Request便提交给 Master 处理；</li>
+<li>Master端只有一个Redis数据库，负责将未处理的Request去重和任务分配，将处理后的Request加入待爬队列，并且存储爬取的数据。</li>
 </ul>
 </li>
 </ul>
+<p><img src="/medias/img/37.png" alt><br><img src="/medias/img/38.png" alt></p>
+<ul>
+<li><p>Scrapy-Redis默认使用的就是这种策略，我们实现起来很简单，因为任务调度等工作Scrapy-Redis都已经帮我们做好了，我们只需要继承RedisSpider、指定redis_key就行了。</p>
 </li>
-<li><h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><ul>
-<li>1.计算机的核心是CPU，它承担了所有的计算任务。它就像一座工厂，时刻在运行。<br><img src="/medias/img/09.jpg" alt></li>
-<li>2.假定工厂的电力有限，一次只能供给一个车间使用。也就是说，一个车间开工的时候，其他车间都必须停工。背后的含义就是，单个CPU一次只能运行一个任务。<br><img src="/medias/img/10.png" alt></li>
-<li>3.进程就好比工厂的车间，它代表CPU所能处理的单个任务。任一时刻，CPU总是运行一个进程，其他进程处于非运行状态。<br><img src="/medias/img/11.jpg" alt></li>
-<li>4.一个车间里，可以有很多工人。他们协同完成一个任务。<br><img src="/medias/img/12.jpg" alt></li>
-<li>5.线程就好比车间里的工人。一个进程可以包括多个线程。<br><img src="/medias/img/13.jpg" alt></li>
-<li>6.车间的空间是工人们共享的，比如许多房间是每个工人都可以进出的。这象征一个进程的内存空间是共享的，每个线程都可以使用这些共享内存。<br><img src="/medias/img/14.png" alt></li>
-<li>7.可是，每间房间的大小不同，有些房间最多只能容纳一个人，比如厕所。里面有人的时候，其他人就不能进去了。这代表一个线程使用某些共享内存时，其他线程必须等它结束，才能使用这一块内存。<br><img src="/medias/img/15.jpg" alt></li>
-<li>8.一个防止他人进入的简单方法，就是门口加一把锁。先到的人锁上门，后到的人看到上锁，就在门口排队，等锁打开再进去。这就叫”互斥锁”（Mutual exclusion，缩写 Mutex），防止多个线程同时读写某一块内存区域。<br><img src="/medias/img/16.jpg" alt></li>
-<li>9.还有些房间，可以同时容纳n个人，比如厨房。也就是说，如果人数大于n，多出来的人只能在外面等着。这好比某些内存区域，只能供给固定数目的线程使用。<br><img src="/medias/img/17.jpg" alt></li>
-<li>10.这时的解决方法，就是在门口挂n把钥匙。进去的人就取一把钥匙，出来时再把钥匙挂回原处。后到的人发现钥匙架空了，就知道必须在门口排队等着了。这种做法叫做”信号量”（Semaphore），用来保证多个线程不会互相冲突。<br>不难看出，mutex是semaphore的一种特殊情况（n=1时）。也就是说，完全可以用后者替代前者。但是，因为mutex较为简单，且效率高，所以在必须保证资源独占的情况下，还是采用这种设计。<br><img src="/medias/img/18.jpg" alt></li>
-<li>11.操作系统的设计，因此可以归结为三点：<ul>
-<li>以多进程形式，允许多个任务同时运行；</li>
-<li>以多线程形式，允许单个任务分成不同的部分运行；</li>
-<li>提供协调机制，一方面防止进程之间和线程之间产生冲突，另一方面允许进程之间和线程之间共享资源。</li>
-</ul>
+<li><p>缺点是，Scrapy-Redis调度的任务是Request对象，里面信息量比较大（不仅包含url，还有callback函数、headers等信息），可能导致的结果就是会降低爬虫速度、而且会占用Redis大量的存储空间，所以如果要保证效率，那么就需要一定硬件水平。</p>
 </li>
 </ul>
+<h4 id="1-3-分布式原理"><a href="#1-3-分布式原理" class="headerlink" title="1.3 分布式原理"></a>1.3 分布式原理</h4><p>scrapy-redis实现分布式，其实从原理上来说很简单，这里为描述方便，我们把自己的核心服务器称为 master，而把用于跑爬虫程序的机器称为 slave。</p>
+<p>回顾 scrapy 框架，我们首先给定一些start_urls，spider 最先访问 start_urls 里面的 url，再根据我们的 parse 函数，对里面的元素、或者是其他的二级、三级页面进行抓取。而要实现分布式，只需要在这个starts_urls里面做文章就行了。进一步描述如下：</p>
+<ol>
+<li>master 产生 starts_urls，url 会被封装成 request 放到 redis 中的 spider:requests，总的 scheduler 会从这里分配 request，当这里的 request 分配完后，会继续分配 start_urls 里的 url。</li>
+<li>slave 从 master 的 redis 中取出待抓取的 request，下载完网页之后就把网页的内容发送回 master 的 redis，key 是 spider:items。scrapy 可以通过 settings 来让 spider 爬取结束之后不自动关闭，而是不断的去询问队列里有没有新的 url，如果有新的 url，那么继续获取 url 并进行爬取，所以这一过程将不断循环。</li>
+<li>master 里的 reids 还有一个 key 是 “spider:dupefilter” 用来存储抓取过的 url 的 fingerprint（使用哈希函数将url运算后的结果），防止重复抓取，只要 redis 不清空，就可以进行断点续爬。</li>
+</ol>
+<p>对于已有的 scrapy 程序，对其扩展成分布式程序还是比较容易的。总的来说就是以下几步：</p>
+<ol>
+<li>找一台高性能服务器，用于 redis 队列的维护以及数据的存储。</li>
+<li>扩展 scrapy 程序，让其通过服务器的 redis 来获取 start_urls，并改写 pipeline 里数据存储部分，把存储地址改为服务器地址。</li>
+<li>在服务器上写一些生成url的脚本，并定期执行。</li>
+</ol>
+<h3 id="2-零件介绍"><a href="#2-零件介绍" class="headerlink" title="2.零件介绍"></a>2.零件介绍</h3><ol>
+<li><p>connection.py<br> 根据 settings 里的配置实例化 redis 连接，被 dupefilter 和 scheduler 调用。</p>
 </li>
-</ul>
+<li><p>dupefilter.py<br> 对 request 进行去重，使用了 redis 的 set。</p>
+</li>
+<li><p>queue.py<br> 三种 queue, SpiderQueue（FIFO), SpiderPriorityQueue，以及 SpiderStack(LIFI)。默认使用的是第二种。</p>
+</li>
+<li><p>pipelines.py<br> 分布式处理，将 item 存储在 redis 中。</p>
+</li>
+<li><p>scheduler.py<br> 取代 scrapy 自带的 scheduler,实现分布式调度，数据结构来自 queue。</p>
+</li>
+<li><p>spider.py<br> 定义 RedisSpider.py, 继承了 RedisMixin 和 CrawlSpider。</p>
+</li>
+</ol>
+<p>由上可知，Scrapy-Redis 实现的 爬虫分布式 和 item处理分布式 就是由模块 <strong>scheduler</strong> 和模块 <strong>pipelines</strong> 实现。上述其它模块作为为二者辅助的功能模块。</p>
 
             </div>
             <hr/>
@@ -475,7 +478,7 @@
                     </span>
                     <a href="https://gaoxiaofan.xyz" class="b-link-green">高晓凡的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/2019/05/20/进程和线程/" class="b-link-green">进程和线程</a>
+                    <a href="/2019/07/11/分布式爬虫原理/" class="b-link-green">分布式爬虫的介绍</a>
                 </p>
             </div>
         </div>
@@ -518,34 +521,85 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2019/05/20/爬虫Pyspider+Selenium+Chrome/">
+                <a href="/2019/07/11/分布式爬虫原理/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="爬虫Pyspider+Selenium+Chrome">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="分布式爬虫的介绍">
                         
-                        <span class="card-title">爬虫Pyspider+Selenium+Chrome</span>
+                        <span class="card-title">分布式爬虫的介绍</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
-                    <div class="summary">分析：这次需要爬取的任务大致情况如下：
-1.需要爬取某网站试题以及答案
-
-2.试题以及答案最终会在同一个页面上呈现
-
-3.每次显示有限的题数，例如20道题目，做完提交后可以看答案
-
-4.需要进行答案填写和提交，下次进入才会有新的题目出来
-
-</div>
+                    <div class="summary">分布式爬虫和爬虫的区别是什么？难道仅仅是多了”分布式”三个字？
+1.原理1.1 对比Scrapy与Scrapy-Redis架构图
+Scrapy架构图
+Scrapy-Redis架构图
+从上图可以看出对比可以看出，多了一个redis组件，主要影</div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-20
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-07-11
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/技术/" class="post-category" target="_blank">
+                                    技术
+                                </a>
+                            
+                            
                         </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/爬虫/" target="_blank">
+                        <span class="chip bg-color">爬虫</span>
+                    </a>
+                    
+                    <a href="/tags/分布式/" target="_blank">
+                        <span class="chip bg-color">分布式</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2019/05/30/一张图让你明白反爬虫与爬虫手段/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="一张图让你明白反爬虫与爬虫手段">
+                        
+                        <span class="card-title">一张图让你明白反爬虫与爬虫手段</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">爬虫与发爬虫的厮杀，一方为了拿到数据，一方为了防止爬虫拿到数据，谁是最后的赢家？
+爬虫中的一些概念爬虫:自动获取网站数据的程序
+
+反爬虫：使用技术手段防止爬虫程序爬取数据
+
+误伤：反爬虫技术将普通用户识别为爬虫，这种情况多出现在封ip中，例</div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-30
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -565,58 +619,8 @@
                         <span class="chip bg-color">爬虫</span>
                     </a>
                     
-                    <a href="/tags/selenium/" target="_blank">
-                        <span class="chip bg-color">selenium</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2019/05/11/使用git将已有的项目推送到github/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="使用git将已有的项目推送到github">
-                        
-                        <span class="card-title">使用git将已有的项目推送到github</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary">目标:将已有的项目添加到GitHub(1):在GitHub上创建存储库，并复制存储库的地址(2):    在本地初始化仓库打开终端,切换到要需要添加到GitHub的目录,然后依次执行以下代码:
-1.touch README.md  # 创建</div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-11
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fa fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/技术/" class="post-category" target="_blank">
-                                    技术
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/git/" target="_blank">
-                        <span class="chip bg-color">git</span>
-                    </a>
-                    
-                    <a href="/tags/github/" target="_blank">
-                        <span class="chip bg-color">github</span>
+                    <a href="/tags/反爬虫/" target="_blank">
+                        <span class="chip bg-color">反爬虫</span>
                     </a>
                     
                 </div>
